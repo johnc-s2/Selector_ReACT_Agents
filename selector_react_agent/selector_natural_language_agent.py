@@ -16,11 +16,11 @@ load_dotenv()
 # API Keys
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 SELECTOR_AI_API_KEY = os.getenv("SELECTOR_AI_API_KEY")
+SELECTOR_API_URL = os.getenv("SELECTOR_DATA_URL")
 
 logging.basicConfig(level=logging.INFO)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-SELECTOR_API_URL = "https://selector16.training.selector.ai/internal/collab/copilot/v1/chat"
 
 # ---------------------------- SELECTOR AI API CLASS ---------------------------- #
 class SelectorAPI:

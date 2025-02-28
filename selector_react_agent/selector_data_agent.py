@@ -16,12 +16,10 @@ load_dotenv()
 # API Keys
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 SELECTOR_AI_API_KEY = os.getenv("SELECTOR_AI_API_KEY")
+SELECTOR_API_URL = os.getenv("SELECTOR_NL_URL")
 
 logging.basicConfig(level=logging.INFO)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-# ✅ Updated API Endpoint for Raw Data
-SELECTOR_API_URL = "https://selector16.training.selector.ai/api/collab2-slack/command"
 
 # ---------------------------- SELECTOR RAW DATA API CLASS ---------------------------- #
 class SelectorRawDataAPI:
