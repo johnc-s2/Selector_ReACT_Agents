@@ -5,7 +5,7 @@ import streamlit as st
 import urllib3
 from dotenv import load_dotenv
 from langchain.agents import initialize_agent, Tool
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 ## Import Selector AI Agents
 from selector_natural_language_agent import ask_selector_tool
@@ -20,7 +20,7 @@ from servicenow_agent import tools as servicenow_tools, prompt_template as servi
 # **🚀 Load Environment Variables**
 # ============================================================
 load_dotenv()
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # ============================================================
 # **🔧 Configure Logging & Security**
@@ -31,7 +31,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # ============================================================
 # **🤖 Define the LLM**
 # ============================================================
-llm = ChatOpenAI(model_name="gpt-4o", temperature=0.1)
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.1)
 
 # ============================================================
 # **📡 Initialize Agents**

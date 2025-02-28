@@ -4,7 +4,7 @@ import logging
 import requests
 from dotenv import load_dotenv
 from langchain.tools import Tool
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain.prompts import PromptTemplate
 import urllib3
@@ -14,6 +14,7 @@ load_dotenv()
 SERVICENOW_URL = os.getenv("SERVICENOW_URL").rstrip('/')
 SERVICENOW_USER = os.getenv("SERVICENOW_USER")
 SERVICENOW_PASSWORD = os.getenv("SERVICENOW_PASSWORD")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -302,7 +303,7 @@ update_problem_tool = Tool(
 )
 
 # Define the AI Agent
-llm = ChatOpenAI(model_name="gpt-4o", temperature=0.2)
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.1)
 
 tools = [get_problems_tool, create_problem_tool, update_problem_tool]
 

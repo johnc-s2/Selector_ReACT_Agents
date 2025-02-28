@@ -5,7 +5,7 @@ import logging
 import requests
 import urllib3
 from langchain.tools import Tool
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import AgentExecutor, create_react_agent
 from langchain.prompts import PromptTemplate
 from dotenv import load_dotenv
@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # API Keys
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 SELECTOR_AI_API_KEY = os.getenv("SELECTOR_AI_API_KEY")
 SELECTOR_API_URL = os.getenv("SELECTOR_DATA_URL")
 
@@ -124,7 +124,7 @@ tool_names = ", ".join([tool.name for tool in tools])
 tool_descriptions = "\n".join([f"{tool.name}: {tool.description}" for tool in tools])
 
 # ---------------------------- LLM & PROMPT TEMPLATE ---------------------------- #
-llm = ChatOpenAI(model_name="gpt-4o", temperature=0.1)
+llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", temperature=0.1)
 
 selector_prompt = PromptTemplate(
     input_variables=["input", "agent_scratchpad", "tool_names", "tools"],
