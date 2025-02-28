@@ -1,0 +1,29 @@
+version: '3.6'
+
+services:
+  smtp_server:
+    build:
+      context: .
+      dockerfile: ./docker/smtp.Dockerfile  # Use your custom Dockerfile
+    container_name: smtp_server
+    restart: always
+    ports:
+      - "1025:1025"  # Local SMTP server
+    volumes:
+      - ./selector_react_agent:/app  # Mount Python SMTP server script
+    command: python /app/smtp_server.py  # Run SMTP server script
+
+  selector_react_agent:
+    image: johncapobianco/selector_react_agent:selector_react_agent
+    container_name: selector_react_agent
+    restart: always
+    build:
+      context: ./
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "8501:8501"
+    depends_on:
+      - smtp_server
+    environment:
+      - SMTP_SERVER=smtp_server
+      - SMTP_PORT=1025
