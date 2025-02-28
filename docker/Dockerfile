@@ -19,11 +19,8 @@ RUN echo "==> Install pyATS[fulll].." \
   && pip install --break-system-packages pyats[full]
 
 RUN echo "==> Install requirements.." \
-  && pip install --break-system-packages -U --quiet langchain_community langchain-openai \
+  && pip install --break-system-packages -U --quiet langchain_community langchain-google-genai \
   && pip install --break-system-packages streamlit --upgrade
-
-RUN echo "==> Install openai.." \
-  && pip install --break-system-packages openai
 
 COPY /selector_react_agent /selector_react_agent/
 COPY /scripts /scripts/
