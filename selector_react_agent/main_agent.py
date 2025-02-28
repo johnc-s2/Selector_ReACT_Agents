@@ -9,7 +9,6 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 ## Import Selector AI Agents
 from selector_natural_language_agent import ask_selector_tool
-from selector_data_agent import ask_selector_raw_tool
 
 # Import other AI Agents
 from netbox_agent import tools as netbox_tools, prompt_template as netbox_prompt
@@ -56,13 +55,6 @@ def selector_agent_func(input_text: str) -> dict:
     response = ask_selector_tool.func({"input": input_text})
     return {"output": response}  # ✅ Wrap in a dict for consistency
 
-def selector_raw_data_agent_func(input_text: str) -> dict:
-    """ Calls the correct raw data agent with the required `#select` prefix. """
-    formatted_command = f"#select {input_text}"
-    logging.info(f"📥 Formatted command for RAW Selector AI API: {formatted_command}")
-    response = ask_selector_raw_tool.func({"command": formatted_command})
-    return {"output": response}
-
 ## Other AI Agent Functions
 def netbox_agent_func(input_text: str) -> str:
     return netbox_agent.invoke(f"NetBox: {input_text}")
@@ -90,12 +82,6 @@ selector_tool = Tool(
     description="Use this tool for AI-generated insights from Selector AI."
 )
 
-selector_raw_tool = Tool(  # ✅ Fixed conflict (renamed)
-    name="Selector AI Agent for Raw Data",
-    func=selector_raw_data_agent_func,
-    description="Use this tool for Selector AI raw JSON data."
-)
-
 netbox_tool = Tool(
     name="NetBox Agent", func=netbox_agent_func,
     description="Use for NetBox operations and queries."
@@ -114,7 +100,7 @@ servicenow_tool = Tool(
 # ============================================================
 # **🤖 Main Parent Routing Agent**
 # ============================================================
-parent_tools = [selector_tool, selector_raw_tool, netbox_tool, email_tool, servicenow_tool]
+parent_tools = [selector_tool,netbox_tool, email_tool, servicenow_tool]
 
 parent_agent = initialize_agent(
     tools=parent_tools, llm=llm,
