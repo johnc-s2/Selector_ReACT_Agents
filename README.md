@@ -17,6 +17,8 @@ SERVICENOW_URL=<ServiceNow URL>
 SERVICENOW_USER=<service now user>
 SERVICENOW_PASSWORD=<service now password>
 SELECTOR_AI_API_KEY=<selector API key>
+SELECTOR_NL_URL="https://<selector URL>/api/collab2-slack/command"
+SELECTOR_DATA_URL="https://<selector URL>/internal/collab/copilot/v1/chat"
 
 ## Docker 
 Works on Mac, Windows, or Linux with docker-compose
