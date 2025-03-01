@@ -15,6 +15,9 @@ from netbox_agent import tools as netbox_tools, prompt_template as netbox_prompt
 from email_agent import send_email_tool  
 from servicenow_agent import tools as servicenow_tools, prompt_template as servicenow_prompt
 
+# ✅ Import OpenCVE AI Agent
+from opencve_agent import fetch_cves_tool  
+
 # ============================================================
 # **🚀 Load Environment Variables**
 # ============================================================
@@ -73,6 +76,10 @@ def email_agent_func(input_data) -> dict:
 def servicenow_agent_func(input_text: str) -> str:
     return servicenow_agent.invoke(f"ServiceNow: {input_text}")
 
+def opencve_agent_func(input_data: dict) -> dict:
+    """Fetches CVEs from OpenCVE API based on vendor and version."""
+    return fetch_cves_tool.func(input_data)
+
 # ============================================================
 # **🔹 Create LangChain Tools**
 # ============================================================
@@ -97,24 +104,30 @@ servicenow_tool = Tool(
     description="Use for ServiceNow incident management operations."
 )
 
+opencve_tool = Tool(
+    name="OpenCVE Agent", func=opencve_agent_func,
+    description="Fetch CVEs for a given vendor and version from OpenCVE."
+)
+
 # ============================================================
 # **🤖 Main Parent Routing Agent**
 # ============================================================
-parent_tools = [selector_tool,netbox_tool, email_tool, servicenow_tool]
+parent_tools = [selector_tool, netbox_tool, email_tool, servicenow_tool, opencve_tool]
 
 parent_agent = initialize_agent(
     tools=parent_tools, llm=llm,
     agent="zero-shot-react-description",
-    verbose=True
+    verbose=True,
+    handle_parsing_errors=True
 )
 
 logging.info(f"🚀 Main Parent Routing Agent Initialized with Tools: {[tool.name for tool in parent_tools]}")
 
 # ============================================================
-# **🛰️ Streamlit UI - Chat with Selector AI**
+# **🛰️ Streamlit UI - Chat with AI Agents**
 # ============================================================
-st.title("🔍 Selector ReACT AI Agent")
-st.write("Drive infrastructure with your natural language!")
+st.title("🔍 Multi-Agent ReACT AI System")
+st.write("Query Selector AI, NetBox, OpenCVE, and more!")
 
 # User input text area
 user_input = st.text_area("💬 Enter your question:")
@@ -146,5 +159,5 @@ if st.button("Send"):
 # ============================================================
 st.write("### 💬 Conversation History")
 for chat in st.session_state.conversation:
-    role = "👤 You" if chat["role"] == "user" else "🤖 Selector AI"
+    role = "👤 You" if chat["role"] == "user" else "🤖 AI Agent"
     st.write(f"**{role}:** {chat['content']}")
