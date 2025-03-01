@@ -16,7 +16,7 @@ load_dotenv()
 # API Keys
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 SELECTOR_AI_API_KEY = os.getenv("SELECTOR_AI_API_KEY")
-SELECTOR_API_URL = os.getenv("SELECTOR_DATA_URL")
+SELECTOR_API_URL = os.getenv("SELECTOR_URL")
 
 logging.basicConfig(level=logging.INFO)
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
