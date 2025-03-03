@@ -18,6 +18,9 @@ from servicenow_agent import tools as servicenow_tools, prompt_template as servi
 # ✅ Import OpenCVE AI Agent
 from opencve_agent import fetch_cves_tool  
 
+# ✅ Import Slack AI Agent
+from slack_agent import send_slack_tool
+
 # ============================================================
 # **🚀 Load Environment Variables**
 # ============================================================
@@ -46,6 +49,12 @@ servicenow_agent = initialize_agent(
 
 netbox_agent = initialize_agent(
     tools=netbox_tools, llm=llm,
+    agent='structured-chat-zero-shot-react-description',
+    prompt=netbox_prompt, verbose=True
+)
+
+slack_agent = initialize_agent(
+    tools=send_slack_tool, llm=llm,
     agent='structured-chat-zero-shot-react-description',
     prompt=netbox_prompt, verbose=True
 )
@@ -80,6 +89,9 @@ def opencve_agent_func(input_data: dict) -> dict:
     """Fetches CVEs from OpenCVE API based on vendor and version."""
     return fetch_cves_tool.func(input_data)
 
+def slack_agent_func(input_text: str) -> str:
+    return slack_agent.invoke(f"Slack: {input_text}")
+
 # ============================================================
 # **🔹 Create LangChain Tools**
 # ============================================================
@@ -109,10 +121,15 @@ opencve_tool = Tool(
     description="Fetch CVEs for a given vendor and version from OpenCVE."
 )
 
+slack_tool = Tool(
+    name="Slack Agent", func=slack_agent_func,
+    description="Send messages to Slack"
+)
+
 # ============================================================
 # **🤖 Main Parent Routing Agent**
 # ============================================================
-parent_tools = [selector_tool, netbox_tool, email_tool, servicenow_tool, opencve_tool]
+parent_tools = [selector_tool, netbox_tool, email_tool, servicenow_tool, opencve_tool, slack_tool]
 
 parent_agent = initialize_agent(
     tools=parent_tools, llm=llm,
